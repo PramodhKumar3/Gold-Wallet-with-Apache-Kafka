@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Payment History</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: url('[[@{/images/payment.jpg}]]') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', sans-serif;
+            color: #f8f9fa;
+        }
+
+        .glass-panel {
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+            margin-top: 40px;
+        }
+
+        h2 {
+            color: #ffc107;
+            font-weight: 700;
+        }
+
+        p strong {
+            color: #ced4da;
+        }
+
+        .table {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .table th {
+            background-color: rgba(13, 110, 253, 0.9);
+            color: white;
+            font-weight: 700;
+        }
+
+        .table td {
+            color: #f8f9fa;
+            background-color: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            font-weight: 600;
+        }
+
+        @media (max-width: 576px) {
+            .glass-panel {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/api/v1/users/home}">Admin User Dashboard</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="glass-panel">
+        <h2><i class="bi bi-credit-card-2-front me-2"></i> Payment History</h2>
+        <hr class="border-light">
+        <p>
+            <strong>User ID:</strong> <span th:text="${userId}">[userId]</span>
+        </p>
+
+        <div th:if="${#lists.isEmpty(payments)}">
+            <p class="text-muted">No payments found for this user.</p>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(payments)}">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover mt-3">
+                    <thead>
+                    <tr>
+                        <th>Payment ID</th>
+                        <th>Date</th>
+                        <th>Amount (₹)</th>
+                        <th>Method</th>
+                        <th>Transaction Type</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${payments}">
+                        <td th:text="${p.paymentId}">[ID]</td>
+                        <td th:text="${p.createdAt}">[Date]</td>
+                        <td th:text="${p.amount}">[Amount]</td>
+                        <td th:text="${p.paymentMethod}">[Method]</td>
+                        <td th:text="${p.transactionType}">[Type]</td>
+                        <td th:text="${p.paymentStatus}">[Status]</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <a th:href="@{/api/v1/users/home}" class="btn btn-outline-warning mt-3">
+            <i class="bi bi-arrow-left-circle"></i> Back to Home
+        </a>
+    </div>
+</div>
+</body>
+</html>

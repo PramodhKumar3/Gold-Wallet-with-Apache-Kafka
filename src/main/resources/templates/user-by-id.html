@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>User Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+body, html {
+	height: 100%;
+	margin: 0;
+	background: url('[[@{/images/list3.jpg}]]') no-repeat center center
+		fixed;
+	background-size: cover;
+	font-family: 'Segoe UI', sans-serif;
+	color: #f8f9fa;
+}
+
+.details-section {
+	background-color: rgba(0, 0, 0, 0.6);
+	padding: 30px;
+	border-radius: 12px;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+	margin-bottom: 30px;
+}
+
+h2 {
+	color: #ffc107;
+	font-weight: 700;
+}
+
+h6 {
+	color: #17a2b8;
+}
+
+.list-group-item {
+	background-color: transparent;
+	color: #f8f9fa;
+	border: none;
+	padding-left: 0;
+}
+
+.list-group-item strong {
+	color: #ced4da;
+}
+
+.badge.bg-dark {
+	background-color: #343a40 !important;
+}
+
+.btn {
+	font-weight: 600;
+}
+
+@media ( max-width : 576px) {
+	.details-section {
+		padding: 20px;
+	}
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/api/v1/users/home}">Admin
+				User DashBoard</a>
+		</div>
+	</nav>
+
+	<div class="container">
+		<h2 class="mb-4 text-center">
+			<i class="bi bi-person-circle me-2"></i>User Profile
+		</h2>
+
+		<div class="details-section">
+			<div class="row">
+				<!-- User Info -->
+				<div class="col-md-6 mb-4">
+					<h6 class="fw-bold">User Info</h6>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item"><strong>User ID:</strong> <span
+							class="badge bg-dark" th:text="${user.userId}"></span></li>
+						<li class="list-group-item"><strong>Name:</strong> <span
+							th:text="${user.name}"></span></li>
+						<li class="list-group-item"><strong>Email:</strong> <span
+							th:text="${user.email}"></span></li>
+						<li class="list-group-item"><strong>Balance:</strong> <span
+							th:text="${user.balance}"></span></li>
+						<li class="list-group-item"><strong>Created At:</strong> <span
+							th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"></span></li>
+					</ul>
+				</div>
+
+				<!-- Address Info -->
+				<div class="col-md-6 mb-4">
+					<h6 class="fw-bold">Address</h6>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item"><strong>Street:</strong> <span
+							th:text="${user.address?.street}"></span></li>
+						<li class="list-group-item"><strong>City:</strong> <span
+							th:text="${user.address?.city}"></span></li>
+						<li class="list-group-item"><strong>State:</strong> <span
+							th:text="${user.address?.state}"></span></li>
+						<li class="list-group-item"><strong>Postal Code:</strong> <span
+							th:text="${user.address?.postalCode}"></span></li>
+						<li class="list-group-item"><strong>Country:</strong> <span
+							th:text="${user.address?.country}"></span></li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Action Buttons -->
+			<div class="text-center mt-4">
+				<a th:href="@{/api/v1/users/home}"
+					class="btn btn-outline-warning me-3"> <i
+					class="bi bi-arrow-left-circle"></i> Back to Home
+				</a> <a th:href="@{'/api/v1/users/updatePage/' + ${user.userId}}"
+					class="btn btn-warning"> <i class="bi bi-pencil-square"></i>
+					Update User
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

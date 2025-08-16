@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Address Details</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+body, html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background: url('[[@{/images/address2.jpg}]]') no-repeat center center
+		fixed;
+	background-size: cover;
+	font-family: 'Segoe UI', sans-serif;
+	color: #f8f9fa;
+}
+
+.content-wrapper {
+	padding: 40px 20px;
+}
+
+.glass-panel {
+	background-color: rgba(0, 0, 0, 0.6);
+	border-radius: 12px;
+	padding: 30px;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+	max-width: 800px;
+	margin: auto;
+}
+
+.table {
+	background-color: transparent;
+}
+
+.table th {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: #ffc107;
+	font-weight: 700;
+	width: 30%;
+}
+
+.table td {
+	background-color: rgba(255, 255, 255, 0.05);
+	font-weight: 600;
+	color: #e9ecef;
+}
+
+h2 {
+	color: #ffc107;
+	font-weight: 700;
+	margin-bottom: 30px;
+}
+
+h5 {
+	font-weight: 700;
+	color: #ced4da;
+}
+
+.btn {
+	font-weight: 600;
+}
+
+@media ( max-width : 576px) {
+	.glass-panel {
+		padding: 20px;
+	}
+}
+</style>
+</head>
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/api/v1/address/home}">Admin
+				Address DashBoard</a>
+		</div>
+	</nav>
+
+	<!-- Content -->
+	<div class="container content-wrapper">
+		<h2 class="text-center">
+			<i class="bi bi-geo-alt-fill me-2"></i>Address Details
+		</h2>
+
+		<div class="glass-panel">
+			<h5 class="mb-3">Address Information</h5>
+			<table class="table table-bordered">
+				<tr>
+					<th>Address ID</th>
+					<td th:text="${address.addressId}"></td>
+				</tr>
+				<tr>
+					<th>Street</th>
+					<td th:text="${address.street}"></td>
+				</tr>
+				<tr>
+					<th>City</th>
+					<td th:text="${address.city}"></td>
+				</tr>
+				<tr>
+					<th>State</th>
+					<td th:text="${address.state}"></td>
+				</tr>
+				<tr>
+					<th>Postal Code</th>
+					<td th:text="${address.postalCode}"></td>
+				</tr>
+				<tr>
+					<th>Country</th>
+					<td th:text="${address.country}"></td>
+				</tr>
+			</table>
+
+			<div class="text-center mt-4">
+				<a th:href="@{/api/v1/address/home}"
+					class="btn btn-outline-light me-3"> <i
+					class="bi bi-arrow-left-circle"></i> Back to Home
+				</a> <a
+					th:href="@{'/api/v1/address/updatePage/' + ${address.addressId}}"
+					class="btn btn-warning"> <i class="bi bi-pencil-square"></i>
+					Update Address
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Vendors List</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+body, html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background: url('[[@{/images/list.jpg}]]') no-repeat center center fixed;
+	background-size: cover;
+	font-family: 'Segoe UI', sans-serif;
+	color: #f8f9fa;
+}
+
+.full-page-panel {
+	background-color: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(10px);
+	border-radius: 12px;
+	padding: 30px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+	min-height: 90vh;
+}
+
+.table {
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table th {
+	background-color: rgba(13, 110, 253, 0.9);
+	color: #fff;
+	font-weight: 700;
+}
+
+.table td {
+	font-weight: 600;
+	color: #f8f9fa;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.table-hover tbody tr:hover {
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+h2 {
+	color: #0dcaf0;
+	margin-bottom: 20px;
+	font-weight: 700;
+}
+
+.btn {
+	font-weight: 600;
+}
+
+.btn-outline-primary {
+	color: #0dcaf0;
+	border-color: #0dcaf0;
+}
+
+.btn-outline-primary:hover {
+	background-color: #0dcaf0;
+	color: #212529;
+}
+</style>
+</head>
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/api/v1/vendor/home}">Admin
+				Vendor DashBoard</a>
+		</div>
+	</nav>
+
+	<!-- Full Page Content -->
+	<div class="container-fluid px-4">
+		<div class="full-page-panel">
+			<h2>
+				<i class="bi bi-card-list me-2"></i>Vendor List
+			</h2>
+
+			<div class="mb-3">
+				<a th:href="@{/api/v1/vendor/home}" class="btn btn-outline-primary">
+					<i class="bi bi-house-door"></i>&nbsp;Back to Home
+				</a>
+			</div>
+
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>Vendor ID</th>
+							<th>Name</th>
+							<th>Description</th>
+							<th>Contact Person</th>
+							<th>Email</th>
+							<th>Phone</th>
+							<th>Web-site</th>
+							<th>Total Gold (g)</th>
+							<th>Gold Price (₹)</th>
+							<th>Created At</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="vendor : ${vendors}">
+							<td th:text="${vendor.vendorId}"></td>
+							<td th:text="${vendor.vendorName}"></td>
+							<td th:text="${vendor.description}"></td>
+							<td th:text="${vendor.contactPersonName}"></td>
+							<td th:text="${vendor.contactEmail}"></td>
+							<td th:text="${vendor.contactPhone}"></td>
+							<td th:text="${vendor.websiteUrl}"></td>
+							<td th:text="${vendor.totalGoldQuantity}"></td>
+							<td th:text="${vendor.currentGoldPrice}"></td>
+							<td
+								th:text="${#temporals.format(vendor.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+							<td class="text-center"><a
+								th:href="@{'/api/v1/vendor/' + ${vendor.vendorId}}"
+								class="btn btn-info btn-sm"> <i class="bi bi-eye"></i> View
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

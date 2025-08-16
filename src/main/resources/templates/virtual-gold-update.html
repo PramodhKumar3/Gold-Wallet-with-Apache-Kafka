@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Update Virtual Gold Holding</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+body, html {
+	height: 100%;
+	margin: 0;
+	background: url('[[@{/images/update3.jpg}]]') no-repeat center center
+		fixed;
+	background-size: cover;
+	font-family: 'Segoe UI', sans-serif;
+	color: #f8f9fa;
+}
+
+.form-section {
+	background-color: rgba(0, 0, 0, 0.6);
+	padding: 30px;
+	border-radius: 12px;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+	max-width: 800px;
+	margin: auto;
+}
+
+h2 {
+	font-weight: 700;
+	color: #0dcaf0;
+}
+
+label {
+	font-weight: 600;
+	color: #e9ecef;
+}
+
+.form-control, .form-select {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: #f8f9fa;
+	border: 1px solid #ced4da;
+	font-weight: 600;
+}
+
+.form-select option {
+	background-color: #212529;
+	color: #f8f9fa;
+}
+
+.form-control::placeholder {
+	color: #adb5bd;
+}
+
+.form-control:disabled {
+	background-color: rgba(255, 255, 255, 0.2);
+	color: #adb5bd;
+}
+
+.btn {
+	font-weight: 600;
+}
+
+.alert {
+	font-weight: 600;
+}
+
+.error-message {
+	color: #ffc107;
+	font-size: 0.9em;
+	font-weight: 600;
+}
+
+@media ( max-width : 576px) {
+	.form-section {
+		padding: 20px;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="container py-5">
+		<h2 class="text-center mb-4">
+			<i class="bi bi-pencil-square"></i> Update Virtual Gold Holding
+		</h2>
+
+		<div class="form-section">
+			<form th:action="@{/api/v1/virtual_gold_holding/update}"
+				th:object="${holding}" method="post">
+				<!-- Hidden field for Holding ID -->
+				<input type="hidden" th:field="*{holdingId}" />
+
+				<!-- Display Holding ID -->
+				<div class="mb-3">
+					<label class="form-label">Holding ID</label> <input type="text"
+						class="form-control" th:value="*{holdingId}" disabled />
+				</div>
+
+				<!-- Quantity Field -->
+				<div class="mb-3">
+					<label class="form-label">Quantity (g)</label> <input type="number"
+						step="0.01" class="form-control" th:field="*{quantity}" required />
+				</div>
+
+				<!-- Branch Dropdown -->
+				<div class="mb-3">
+					<label class="form-label">Select Branch</label> <select
+						class="form-select" th:field="*{branch.branchId}" required>
+						<option value="" disabled>Select Branch</option>
+						<option th:each="branch : ${branches}"
+							th:value="${branch.branchId}"
+							th:text="${'Branch ID: ' + branch.branchId + ' | ' + branch.vendor.vendorName + ' | ' + branch.address.street + ', ' + branch.address.city + ', ' + branch.address.state + ', ' + branch.address.country}"
+							th:selected="${branch.branchId == holding.branch.branchId}">
+						</option>
+					</select>
+				</div>
+
+				<!-- Submit and Cancel Buttons -->
+				<div class="text-center mt-4">
+					<button type="submit" class="btn btn-success">
+						<i class="bi bi-check-circle"></i> Update Holding
+					</button>
+					<a th:href="@{/api/v1/virtual_gold_holding/home}"
+						class="btn btn-danger ms-2"> <i class="bi bi-x-circle"></i>
+						Cancel
+					</a>
+				</div>
+			</form>
+
+			<!-- Error Message -->
+			<div th:if="${error}" class="alert alert-danger mt-3"
+				th:text="${error}"></div>
+		</div>
+	</div>
+</body>
+</html>

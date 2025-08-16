@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>User DashBoard Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+body {
+	background: url('[[@{/images/user.jpg}]]') no-repeat
+		center center fixed;
+	background-size: cover;
+	font-family: 'Segoe UI', sans-serif;
+	color: #f8f9fa;
+}
+
+.section {
+	background-color: rgba(0, 0, 0, 0.6);
+	padding: 30px;
+	border-radius: 12px;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+	margin-bottom: 30px;
+}
+
+h4 {
+	color: #0dcaf0;
+	font-weight: 700;
+}
+
+label {
+	font-weight: 600;
+	color: #ced4da;
+}
+
+.form-control, .form-select {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: #f8f9fa;
+	font-weight: 600;
+	border: 1px solid #ced4da;
+}
+
+.form-select option {
+	background-color: #212529;
+	color: #f8f9fa;
+}
+
+.form-control::placeholder {
+	color: #adb5bd;
+}
+
+.btn {
+	font-weight: 600;
+}
+
+.alert {
+	font-weight: 600;
+}
+
+@media ( max-width : 576px) {
+	.section {
+		padding: 20px;
+	}
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/api/v3/user_dashboard_profile}">User
+				DashBoard</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item"><a class="nav-link" th:href="@{/api/v3/}">Main
+							DashBoard</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<!-- Flash Messages -->
+		<div th:if="${profileMessage}" class="alert alert-success"
+			role="alert" th:text="${profileMessage}"></div>
+		<div th:if="${virtualMessage}" class="alert alert-success"
+			role="alert" th:text="${virtualMessage}"></div>
+		<div th:if="${convertMessage}" class="alert alert-success"
+			role="alert" th:text="${convertMessage}"></div>
+		<div th:if="${physicalMessage}" class="alert alert-success"
+			role="alert" th:text="${physicalMessage}"></div>
+
+		<!-- User Selection -->
+		<div class="section mb-4">
+			<form method="get" th:action="@{/api/v3/user_dashboard_profile}"
+				class="row g-3 align-items-center">
+				<div class="col-auto">
+					<label for="userId" class="col-form-label"><strong>Select
+							User:</strong></label>
+				</div>
+				<div class="col-auto">
+					<select name="userId" id="userId" class="form-select" required>
+						<option value="" disabled selected>-- Choose User ID --</option>
+						<option th:each="u : ${allUsers}" th:value="${u.userId}"
+							th:selected="${u.userId == selectedUserId}"
+							th:text="${u.userId + ' - ' + u.name}"></option>
+					</select>
+				</div>
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary">
+						<i class="bi bi-search"></i> Load Profile
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- Navigation -->
+		<div class="text-center mb-4">
+			<a
+				th:href="@{/api/v3/user_dashboard_activity(userId=${selectedUserId})}"
+				class="btn btn-outline-light"> <i class="bi bi-clock-history"></i>
+				Go to Activity DashBoard
+			</a>
+		</div>
+
+		<!-- Profile Details -->
+		<div th:if="${user != null}">
+			<div class="section">
+				<h4>
+					<i class="bi bi-person-circle"></i> Personal Details
+				</h4>
+				<form
+					th:action="@{/api/v3/users/update/{userId}(userId=${user.userId})}"
+					method="post" th:object="${user}">
+					<div class="row g-3">
+						<div class="col-md-4">
+							<label>User ID</label> <input type="text" class="form-control"
+								th:field="*{userId}" readonly>
+						</div>
+						<div class="col-md-4">
+							<label>Name</label> <input type="text" class="form-control"
+								th:field="*{name}" required>
+						</div>
+						<div class="col-md-4">
+							<label>Email</label> <input type="email" class="form-control"
+								th:field="*{email}" readonly>
+						</div>
+						<div class="col-md-6">
+							<label>Address</label> <select class="form-select"
+								th:field="*{address.addressId}" required>
+								<option value="" disabled>-- Select Address --</option>
+								<option th:each="addr : ${addresses}"
+									th:value="${addr.addressId}" th:text="${addr.getFullAddress()}"
+									th:selected="${addr.addressId == user.address.addressId}"></option>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label>Balance</label> <input type="text" class="form-control"
+								th:field="*{balance}" readonly>
+						</div>
+					</div>
+					<div class="text-end mt-3">
+						<button type="submit" class="btn btn-primary">
+							<i class="bi bi-save"></i> Update Info
+						</button>
+					</div>
+				</form>
+			</div>
+
+			<!-- Holdings Overview -->
+			<div class="section">
+				<h4>
+					<i class="bi bi-bar-chart-line"></i> Holdings & Balance
+				</h4>
+				<p>
+					<strong>Wallet Balance:</strong> ₹<span th:text="${user.balance}"></span>
+				</p>
+				<p>
+					<strong>Virtual Gold:</strong> <span th:text="${virtualGold}"></span>
+					grams
+				</p>
+				<ul
+					th:if="${virtualHoldings != null and !virtualHoldings.isEmpty()}"
+					th:each="vh : ${virtualHoldings}">
+					<li>Holding ID: <span th:text="${vh.holdingId}"></span>,
+						Quantity: <span th:text="${vh.quantity}"></span>g, Branch ID: <span
+						th:text="${vh.branch.branchId}"></span></li>
+				</ul>
+				<p>
+					<strong>Physical Gold:</strong> <span th:text="${physicalGold}"></span>
+					grams
+				</p>
+				<ul
+					th:if="${physicalHoldings != null and !physicalHoldings.isEmpty()}"
+					th:each="ph : ${physicalHoldings}">
+					<li>Quantity: <span th:text="${ph.quantity}"></span>g, Branch
+						ID: <span th:text="${ph.branch.branchId}"></span></li>
+				</ul>
+			</div>
+
+			<!-- Buy Virtual Gold -->
+			<div class="section">
+				<h4>
+					<i class="bi bi-currency-bitcoin"></i> Virtual Gold
+				</h4>
+				<form th:action="@{/api/v3/virtual_gold_holding/add}" method="post">
+					<input type="hidden" name="userId" th:value="${user.userId}" />
+					<div class="row g-3">
+						<div class="col-md-4">
+							<label>Quantity (grams)</label> <input type="number" step="0.01"
+								name="quantity" class="form-control" required>
+						</div>
+						<div class="col-md-4">
+							<label>Vendor</label> <select name="vendorId" class="form-select">
+								<option th:each="vendor : ${vendors}"
+									th:value="${vendor.vendorId}" th:text="${vendor.vendorName}"></option>
+							</select>
+						</div>
+						<div class="col-md-4 text-end">
+							<label>&nbsp;</label>
+							<button type="submit" class="btn btn-success w-100">
+								<i class="bi bi-cart-plus"></i> Buy
+							</button>
+						</div>
+					</div>
+				</form>
+
+				<!-- Convert to Physical -->
+				<form th:action="@{/api/v3/virtual_gold_holding/convertToPhysical}"
+					method="post" class="mt-3">
+					<input type="hidden" name="userId" th:value="${user.userId}" />
+					<div class="row g-3">
+						<div class="col-md-6">
+							<label>Holding ID</label> <input type="number" name="holdingId"
+								class="form-control" required>
+						</div>
+						<div class="col-md-6 text-end">
+							<label>&nbsp;</label>
+							<button type="submit" class="btn btn-danger w-100">
+								<i class="bi bi-arrow-left-right"></i> Convert to Physical
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<!-- Buy Physical Gold -->
+			<div class="section">
+				<h4>
+					<i class="bi bi-box-seam"></i> Physical Gold
+				</h4>
+				<form th:action="@{/api/v3/physical_gold_transactions/add}"
+					method="post">
+					<input type="hidden" name="userId" th:value="${user.userId}" />
+					<div class="row g-3">
+						<div class="col-md-4">
+							<label>Quantity (grams)</label> <input type="number" step="0.01"
+								name="quantity" class="form-control" required>
+						</div>
+						<div class="col-md-4">
+							<label>Vendor Branch</label> <select name="branchId"
+								class="form-select">
+								<option th:each="branch : ${branches}"
+									th:value="${branch.branchId}"
+									th:text="${branch.vendor.vendorName + ' - ' + branch.address.city}"></option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label>Delivery Address</label> <select name="deliveryAddressId"
+								class="form-select">
+								<option th:each="addr : ${addresses}"
+									th:value="${addr.addressId}" th:text="${addr.getFullAddress()}"></option>
+							</select>
+						</div>
+					</div>
+					<div class="text-end mt-3">
+						<button type="submit" class="btn btn-warning">
+							<i class="bi bi-truck"></i> Buy Physical Gold
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

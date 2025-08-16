@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Payment Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+body, html {
+	height: 100%;
+	margin: 0;
+	background: url('[[@{/images/piggy-bank.jpg}]]') no-repeat center center
+		fixed;
+	background-size: cover;
+	font-family: 'Segoe UI', sans-serif;
+	color: #f8f9fa;
+}
+
+.form-section, .search-section {
+	background-color: rgba(0, 0, 0, 0.6);
+	padding: 30px;
+	border-radius: 12px;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+	margin-bottom: 30px;
+}
+
+h4 {
+	color: #ffc107;
+	font-weight: 700;
+}
+
+label {
+	font-weight: 600;
+	color: #ced4da;
+}
+
+.form-control {
+	font-weight: 600;
+	color: #f8f9fa;
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 1px solid #6c757d;
+}
+
+.form-control::placeholder {
+	color: #adb5bd;
+}
+
+.error-message {
+	color: #ff6b6b;
+	font-size: 0.9em;
+	font-weight: 600;
+}
+
+.btn {
+	font-weight: 600;
+}
+
+@media ( max-width : 576px) {
+	.form-section, .search-section {
+		padding: 20px;
+	}
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/api/v1/payments/home}">Admin
+				Payment Dashboard</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/api/v1/users/home}">UserHome</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/api/v1/payments}">All Payments</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<!-- Form Section -->
+		<div class="form-section">
+			<h4 class="mb-4">
+				<i class="bi bi-credit-card"></i> Add New Payment
+			</h4>
+			<form th:action="@{/api/v1/payments/add}" th:object="${payment}"
+				method="post">
+				<div class="row g-3">
+					<div class="col-md-6">
+						<label>User</label> <select th:field="*{user.userId}"
+							class="form-control">
+							<option value="">-- Select User --</option>
+							<option th:each="user : ${users}" th:value="${user.userId}"
+								th:text="${user.name}"></option>
+						</select>
+						<div class="error-message" th:if="${#fields.hasErrors('user')}"
+							th:errors="*{user}"></div>
+					</div>
+
+					<div class="col-md-6">
+						<label>Amount</label> <input type="number" step="0.01"
+							class="form-control" th:field="*{amount}"
+							placeholder="Enter amount">
+						<div class="error-message" th:if="${#fields.hasErrors('amount')}"
+							th:errors="*{amount}"></div>
+					</div>
+
+					<div class="col-md-6">
+						<label>Payment Method</label> <select th:field="*{paymentMethod}"
+							class="form-control">
+							<option value="">-- Select Method --</option>
+							<option th:each="method : ${methods}" th:value="${method}"
+								th:text="${method}"></option>
+						</select>
+						<div class="error-message"
+							th:if="${#fields.hasErrors('paymentMethod')}"
+							th:errors="*{paymentMethod}"></div>
+					</div>
+
+					<div class="col-md-6">
+						<label>Status</label> <select th:field="*{paymentStatus}"
+							class="form-control">
+							<option value="">-- Select Status --</option>
+							<option th:each="status : ${statuses}" th:value="${status}"
+								th:text="${status}"></option>
+						</select>
+						<div class="error-message"
+							th:if="${#fields.hasErrors('paymentStatus')}"
+							th:errors="*{paymentStatus}"></div>
+					</div>
+				</div>
+
+				<div class="text-center mt-4">
+					<button type="submit" class="btn btn-primary">
+						<i class="bi bi-save"></i> Save Payment
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- Search Section -->
+		<div class="search-section">
+			<h4 class="mb-4">
+				<i class="bi bi-search"></i> Search Payments
+			</h4>
+			<div class="row g-3">
+				<form method="get" th:action="@{/api/v1/payments/search/byId}"
+					class="col-md-3">
+					<label>Payment ID</label> <input type="number" class="form-control"
+						name="paymentId" placeholder="Enter Payment ID" required>
+					<button type="submit" class="btn btn-outline-warning btn-sm mt-2">Search
+						by ID</button>
+				</form>
+
+				<form method="get" th:action="@{/api/v1/payments/search/byUser}"
+					class="col-md-3">
+					<label>User ID</label> <input type="number" class="form-control"
+						name="userId" placeholder="Enter User ID" required>
+					<button type="submit" class="btn btn-outline-warning btn-sm mt-2">Search
+						by User</button>
+				</form>
+
+				<form method="get" th:action="@{/api/v1/payments/search/byMethod}"
+					class="col-md-3">
+					<label>Payment Method</label> <select class="form-control"
+						name="method" required>
+						<option value="">-- Select Method --</option>
+						<option th:each="method : ${methods}" th:value="${method}"
+							th:text="${method}"></option>
+					</select>
+					<button type="submit" class="btn btn-outline-warning btn-sm mt-2">Search
+						by Method</button>
+				</form>
+			</div>
+
+			<div class="text-center mt-4">
+				<a th:href="@{/api/v1/payments}" class="btn btn-info btn-sm"> <i
+					class="bi bi-list-ul"></i> Get All Payments
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

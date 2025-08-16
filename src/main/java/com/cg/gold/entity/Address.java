@@ -30,12 +30,13 @@ public class Address {
 	private String city;
 
 	@NotBlank(message = "State is required")
-	@Pattern(regexp = "[A-Za-z\\s]+", message = "State should contain only Alphabets")
+	@Pattern(regexp = "[A-Za-z\\s]+", message = "State should contain only Alphabets and Spaces")
 	@Size(max = 100, message = "State must be less than 100 characters")
 	@Column(name = "STATE", nullable = false)
 	private String state;
 
 	@Pattern(regexp = "\\d{5,6}", message = "Postal code must be 5 or 6 digits")
+	@NotBlank(message = "Postal code is required")
 	@Column(name = "POSTAL_CODE")
 	private String postalCode;
 

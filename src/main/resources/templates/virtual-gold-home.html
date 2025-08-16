@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Virtual Gold Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+body, html {
+	height: 100%;
+	margin: 0;
+	padding: 20px;
+	background: url('[[@{/images/virtualgold.jpg}]]') no-repeat center
+		center fixed;
+	background-size: cover;
+	-family: 'Segoe UI', sans-serif;
+	color: #f8f9fa;
+}
+
+.form-section, .search-section {
+	background-color: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(10px);
+	padding: 25px;
+	border-radius: 12px;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+	margin-bottom: 30px;
+}
+
+h4 {
+	font-weight: 700;
+	color: #0dcaf0;
+}
+
+label {
+	font-weight: 600;
+	color: #f8f9fa;
+}
+
+.form-control {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: #f8f9fa;
+	border: 1px solid #6c757d;
+	font-weight: 600;
+}
+
+.form-control::placeholder {
+	color: #ced4da;
+}
+
+.form-control:focus {
+	background-color: rgba(255, 255, 255, 0.15);
+	color: #fff;
+	border-color: #0dcaf0;
+	box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.25);
+}
+
+.btn {
+	font-weight: 600;
+}
+
+.error-message {
+	color: #ffc107;
+	font-size: 0.9em;
+}
+
+.alert {
+	font-weight: 600;
+	background-color: rgba(0, 0, 0, 0.7);
+	color: #f8f9fa;
+	border: 1px solid #ffc107;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+		<div class="container-fluid">
+			<a class="navbar-brand"
+				th:href="@{/api/v1/virtual_gold_holding/home}">Admin Virtual
+				Gold DashBoard</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/api/v1/users/home}">UserHome</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/api/v1/virtual_gold_holding}">All Holdings</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<!-- Flash Message -->
+		<div th:if="${message}" class="alert alert-success" role="alert">
+			<span th:text="${message}"></span>
+		</div>
+
+		<!-- Error Message -->
+		<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+			<i class="bi bi-exclamation-triangle-fill"></i> <span
+				th:text="${errorMessage}"></span>
+			<div class="mt-2">
+				<strong>URL:</strong> <span th:text="${url}"></span><br> <strong>Timestamp:</strong>
+				<span th:text="${timestamp}"></span>
+			</div>
+		</div>
+
+		<!-- Add Holding Form -->
+		<div class="form-section">
+			<h4 class="mb-4">
+				<i class="bi bi-piggy-bank-fill"></i> Add Virtual Gold Holding
+			</h4>
+			<form th:action="@{/api/v1/virtual_gold_holding/add}"
+				th:object="${holding}" method="post">
+				<div class="row g-3">
+					<div class="col-md-6">
+						<label>User ID</label> <input type="number" class="form-control"
+							th:field="*{user.userId}">
+						<div class="error-message"
+							th:if="${#fields.hasErrors('user.userId')}"
+							th:errors="*{user.userId}"></div>
+					</div>
+					<div class="col-md-6">
+						<label>Branch ID</label> <input type="number" class="form-control"
+							th:field="*{branch.branchId}">
+						<div class="error-message"
+							th:if="${#fields.hasErrors('branch.branchId')}"
+							th:errors="*{branch.branchId}"></div>
+					</div>
+					<div class="col-md-6">
+						<label>Quantity</label> <input type="number" step="0.01"
+							class="form-control" th:field="*{quantity}">
+						<div class="error-message"
+							th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
+					</div>
+				</div>
+				<div class="text-center mt-4">
+					<button type="submit" class="btn btn-primary">
+						<i class="bi bi-save"></i> Save Holding
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- Search Section -->
+		<div class="search-section">
+			<h4 class="mb-4">
+				<i class="bi bi-search"></i> Search Holdings
+			</h4>
+			<div class="row g-3">
+				<!-- Search by Holding ID -->
+				<form method="get"
+					th:action="@{/api/v1/virtual_gold_holding/search}" class="col-md-4">
+					<label>Holding ID</label> <input type="number" class="form-control"
+						name="holdingId" placeholder="Enter Holding ID" required>
+					<button type="submit" class="btn btn-outline-primary btn-sm mt-2">Search
+						by ID</button>
+				</form>
+
+				<!-- Search by User ID -->
+				<form method="get"
+					th:action="@{/api/v1/virtual_gold_holding/searchByUser}"
+					class="col-md-4">
+					<label>User ID</label> <input type="number" class="form-control"
+						name="userId" placeholder="Enter User ID" required>
+					<button type="submit" class="btn btn-outline-primary btn-sm mt-2">Search
+						by User</button>
+				</form>
+
+				<!-- Search by User ID and Vendor ID -->
+				<form method="get"
+					th:action="@{/api/v1/virtual_gold_holding/byUserAndVendor}"
+					class="col-md-4">
+					<label>User ID</label> <input type="number"
+						class="form-control mb-2" name="userId" placeholder="User ID"
+						required> <label>Vendor ID</label> <input type="number"
+						class="form-control" name="vendorId" placeholder="Vendor ID"
+						required>
+					<button type="submit" class="btn btn-outline-primary btn-sm mt-2">Search
+						by User & Vendor</button>
+				</form>
+			</div>
+
+			<div class="text-center mt-4">
+				<a th:href="@{/api/v1/virtual_gold_holding}"
+					class="btn btn-info btn-sm"> <i class="bi bi-list-ul"></i> Get
+					All Holdings
+				</a> <a th:href="@{/api/v1/virtual_gold_holding/convertToPhysical}"
+					class="btn btn-warning btn-sm ms-2"> <i
+					class="bi bi-arrow-repeat"></i> Convert to Physical
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Address Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+body, html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background: url('[[@{/images/address.jpg}]]') no-repeat center center
+		fixed;
+	background-size: cover;
+	font-family: 'Segoe UI', sans-serif;
+	color: #f8f9fa;
+}
+
+.content-wrapper {
+	padding: 40px 20px;
+}
+
+.glass-panel {
+	background-color: rgba(0, 0, 0, 0.6);
+	border-radius: 12px;
+	padding: 30px;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+	margin-bottom: 30px;
+}
+
+h4 {
+	color: #ffc107;
+	font-weight: 700;
+}
+
+label {
+	font-weight: 600;
+	color: #ced4da;
+}
+
+.form-control {
+	font-weight: 600;
+	color: #f8f9fa;
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 1px solid #6c757d;
+}
+
+.form-control::placeholder {
+	color: #adb5bd;
+}
+
+.error-message {
+	color: #ff6b6b;
+	font-size: 0.9em;
+	font-weight: 600;
+}
+
+.btn {
+	font-weight: 600;
+}
+
+@media ( max-width : 576px) {
+	.glass-panel {
+		padding: 20px;
+	}
+}
+</style>
+</head>
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/api/v1/address/home}">Admin
+				Address DashBoard</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/api/v1/users/home}">UserHome</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/api/v1/address}">All Addresses</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Content -->
+	<div class="container content-wrapper">
+		<!-- Add Address Form -->
+		<div class="glass-panel">
+			<h4 class="mb-4">
+				<i class="bi bi-geo-alt-fill"></i> Add New Address
+			</h4>
+			<form th:action="@{/api/v1/address/add}" th:object="${address}"
+				method="post">
+				<div class="row g-3">
+					<div class="col-md-6">
+						<label>Street</label> <input type="text" class="form-control"
+							th:field="*{street}" placeholder="Enter street">
+						<div class="error-message" th:if="${#fields.hasErrors('street')}"
+							th:errors="*{street}"></div>
+					</div>
+					<div class="col-md-6">
+						<label>City</label> <input type="text" class="form-control"
+							th:field="*{city}" placeholder="Enter city">
+						<div class="error-message" th:if="${#fields.hasErrors('city')}"
+							th:errors="*{city}"></div>
+					</div>
+					<div class="col-md-6">
+						<label>State</label> <input type="text" class="form-control"
+							th:field="*{state}" placeholder="Enter state">
+						<div class="error-message" th:if="${#fields.hasErrors('state')}"
+							th:errors="*{state}"></div>
+					</div>
+					<div class="col-md-6">
+						<label>Postal Code</label> <input type="text" class="form-control"
+							th:field="*{postalCode}" placeholder="Enter postal code">
+						<div class="error-message"
+							th:if="${#fields.hasErrors('postalCode')}"
+							th:errors="*{postalCode}"></div>
+					</div>
+					<div class="col-md-6">
+						<label>Country</label> <input type="text" class="form-control"
+							th:field="*{country}" placeholder="Enter country">
+						<div class="error-message" th:if="${#fields.hasErrors('country')}"
+							th:errors="*{country}"></div>
+					</div>
+				</div>
+				<div class="text-center mt-4">
+					<button type="submit" class="btn btn-primary">
+						<i class="bi bi-save"></i> Save Address
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- Search Section -->
+		<div class="glass-panel">
+			<h4 class="mb-4">
+				<i class="bi bi-search"></i> Search Address
+			</h4>
+			<div class="row g-3">
+				<form method="get" th:action="@{/api/v1/address/search}"
+					class="col-md-6">
+					<label>Address ID</label> <input type="number" class="form-control"
+						name="addressId" placeholder="Enter Address ID" required>
+					<button type="submit" class="btn btn-outline-primary btn-sm mt-2">Search
+						by ID</button>
+				</form>
+			</div>
+			<div class="text-center mt-4">
+				<a th:href="@{/api/v1/address}" class="btn btn-info btn-sm"> <i
+					class="bi bi-list-ul"></i> Get All Addresses
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

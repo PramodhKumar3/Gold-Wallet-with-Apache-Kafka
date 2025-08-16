@@ -3,13 +3,11 @@ package com.cg.gold.utility;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.cg.gold.exception.AddressException;
 import com.cg.gold.exception.PaymentException;
@@ -22,58 +20,54 @@ import com.cg.gold.exception.VirtualGoldHoldingException;
 
 import jakarta.validation.ConstraintViolationException;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
-
-	@Autowired
-	private Environment environment;
 
 	@ExceptionHandler(AddressException.class)
 	public ResponseEntity<ErrorInfo> handleAddressException(AddressException ex) {
-		ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.NOT_FOUND.value(),
-				LocalDateTime.now());
+		ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(PaymentException.class)
 	public ResponseEntity<ErrorInfo> handlePaymentException(PaymentException ex) {
-		ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+		ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(PhysicalGoldTransactionException.class)
 	public ResponseEntity<ErrorInfo> handleTransactionException(PhysicalGoldTransactionException ex) {
-		ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+		ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(TransactionHistoryException.class)
 	public ResponseEntity<ErrorInfo> handleTransactionHistoryException(TransactionHistoryException ex) {
-		ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+		ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(UserException.class)
 	public ResponseEntity<ErrorInfo> handleUserException(UserException ex) {
-		ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+		ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(VendorBranchException.class)
 	public ResponseEntity<ErrorInfo> handleVendorBranchException(VendorBranchException ex) {
-		ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+		ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(VendorException.class)
 	public ResponseEntity<ErrorInfo> handleVendorException(VendorException ex) {
-		ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+		ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(VirtualGoldHoldingException.class)
 	public ResponseEntity<ErrorInfo> handleVirtualGoldHoldingException(VirtualGoldHoldingException ex) {
-		ErrorInfo errorInfo = new ErrorInfo(environment.getProperty(ex.getMessage()), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+		ErrorInfo errorInfo = new ErrorInfo(ex.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 

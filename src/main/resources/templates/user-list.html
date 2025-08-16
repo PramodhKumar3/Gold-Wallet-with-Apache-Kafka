@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Users List</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+body, html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background: url('[[@{/images/list.jpg}]]') no-repeat center center fixed;
+	background-size: cover;
+	font-family: 'Segoe UI', sans-serif;
+	color: #f8f9fa;
+}
+
+.glass-panel {
+	background-color: rgba(0, 0, 0, 0.6);
+	border-radius: 12px;
+	padding: 30px;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+	margin: 40px auto;
+	max-width: 1200px;
+}
+
+.table {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.table th {
+	background-color: rgba(13, 110, 253, 0.9);
+	color: white;
+	font-weight: 700;
+}
+
+.table td {
+	font-weight: 600;
+	color: #f8f9fa;
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-hover tbody tr:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+h2 {
+	color: #ffc107;
+	margin-bottom: 20px;
+	font-weight: 700;
+}
+
+.btn {
+	font-weight: 600;
+}
+
+@media ( max-width : 576px) {
+	.glass-panel {
+		padding: 20px;
+	}
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/api/v1/users/home}">Admin
+				User Dashboard</a>
+		</div>
+	</nav>
+
+	<div class="container">
+		<h2 class="text-center">
+			<i class="bi bi-people-fill me-2"></i>User List
+		</h2>
+		<div class="text-center mb-4">
+			<a th:href="@{/api/v1/users/home}" class="btn btn-outline-warning">
+				<i class="bi bi-arrow-left-circle"></i>&nbsp;Back to Home
+			</a>
+		</div>
+
+		<div class="glass-panel">
+			<div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>User ID</th>
+							<th>Email</th>
+							<th>Name</th>
+							<th>Balance</th>
+							<th>Created At</th>
+							<th>City</th>
+							<th>State</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="user : ${users}">
+							<td th:text="${user.userId}"></td>
+							<td th:text="${user.email}"></td>
+							<td th:text="${user.name}"></td>
+							<td th:text="${user.balance}"></td>
+							<td
+								th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+							<td th:text="${user.address?.city}"></td>
+							<td th:text="${user.address?.state}"></td>
+							<td class="text-center"><a
+								th:href="@{'/api/v1/users/' + ${user.userId}}"
+								class="btn btn-info btn-sm"> <i class="bi bi-eye"></i> View
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
